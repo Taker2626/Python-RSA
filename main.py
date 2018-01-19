@@ -136,13 +136,12 @@ def decode_message(m,b_len=2048):
         String=str(bin(i)).replace('0b','')
         String='0'*((b_len-len(String))%8)+String
         for _ in range(int(len(String)/8)):
-            print(String[0:8])
             Out+=chr(int(String[0:8],base=2))
             String=String.replace(String[0:8],'',1)
     return Out
 
 def crypt(Key,m,b_len=2048):
-    if type(m) is array:
+    if type(m) is list:
         Helper=number_cryption(Key,m)
         return decode_message(Helper,b_len)
     else:
