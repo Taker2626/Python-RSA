@@ -57,6 +57,20 @@ def carmichael(p,q,Test=False):
             return 0
     return abs((p-1)*(q-1))/gcd((p-1)*(q-1));
 
+def modinv(a, m):
+    def egcd(a, b):
+        if a == 0:
+            return (b, 0, 1)
+        else:
+            g, y, x = egcd(b % a, a)
+            return (g, x - (b // a) * y, y)
+
+    g, x, y = egcd(a, m)
+    if g != 1:
+        raise Exception('modular inverse does not exist')
+    else:
+        return x % m
+
 def key_generator(p,q=0,Test=False,h=0):
     if q==0:
         n=p
@@ -72,4 +86,16 @@ def key_generator(p,q=0,Test=False,h=0):
             h=random.randrange(2,carm)
             if gcd(h,carm)==1:
                 break;
-    
+    d=modinv(h,carm)
+    return n,h,d
+
+def auto_key(b_len=2048):
+    while True:
+        p=random.randrange(2,pow(2,b_len//2))
+        if miller_rabin(p):
+            break;
+    while True:
+        q=random.randrange(2,pow(2,b_len//2))
+        if miller_rabin(p):
+            break;
+    return key_generator(p,q)
