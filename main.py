@@ -99,3 +99,14 @@ def auto_key(b_len=2048):
         if miller_rabin(p):
             break;
     return key_generator(p,q)
+
+def number_cryption(n,p,m):
+    In=[]
+    Out=[]
+    if type(m) is int:
+        In.append(m)
+    else:
+        In=m
+    for i in In:
+        Out.append(pow(i,p,n))
+    return Out
