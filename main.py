@@ -128,7 +128,7 @@ def create_message(m, b_len=2048):
     Out.append(int(string,base=2))
     return Out
 
-def decode_message(m,b_len):
+def decode_message(m,b_len=2048):
     Out=''
     for i in m:
         String=str(bin(i)).replace('0b','')
