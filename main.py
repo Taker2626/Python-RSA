@@ -87,7 +87,7 @@ def key_generator(p,q=0,Test=False,h=0):
             if xgcd(h,carm)[0]==1:
                 break;
     d=modinv(h,carm)
-    return n,h,d
+    return [n,h],[n,d]
 
 def auto_key(b_len=2048):
     while True:
@@ -100,7 +100,9 @@ def auto_key(b_len=2048):
             break;
     return key_generator(p,q)
 
-def number_cryption(n,p,m):
+def number_cryption(Key,m):
+    n=Key[0]
+    p=Key[1]
     In=[]
     Out=[]
     if type(m) is int:
@@ -138,3 +140,11 @@ def decode_message(m,b_len=2048):
             Out+=chr(int(String[0:8],base=2))
             String=String.replace(String[0:8],'',1)
     return Out
+
+def crypt(Key,m,b_len=2048):
+    if type(m) is array:
+        Helper=number_cryption(Key,m)
+        return decode_message(Helper,b_len)
+    else:
+        Helper=create_message(m,b_len)
+        return number_cryption(Key,Helper)
