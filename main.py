@@ -1,5 +1,12 @@
 import random
-from math import gcd
+
+def xgcd(b, n):
+    x0, x1, y0, y1 = 1, 0, 0, 1
+    while n != 0:
+        q, b, n = b // n, n, b % n
+        x0, x1 = x1, x0 - q * x1
+        y0, y1 = y1, y0 - q * y1
+    return  b, x0, y0
 
 def fermat_test(p,n=1):
     if p==2:
@@ -9,7 +16,7 @@ def fermat_test(p,n=1):
     for i in range(n):
         while True:
             a=random.randint(1,p)
-            if gcd(a,p)==1:
+            if xgcd(a,p)[0]==1:
                 break;
         if pow(a,p-1,p)!=1:
             return False
@@ -40,7 +47,7 @@ def miller_rabin(n, k=40):
 def carmichael_slow(p):
     Coprimes=[]
     for i in range(p):
-        if gcd(p,i)==1:
+        if xgcd(p,i)[0]==1:
             Coprimes.append(i)
     n=1
     while True:
@@ -55,17 +62,10 @@ def carmichael(p,q,Test=False):
     if Test==True:
         if not miller_rabin(p) or not miller_rabin(q):
             return 0
-    return abs((p-1)*(q-1))//gcd((p-1),(q-1));
+    return abs((p-1)*(q-1))//xgcd((p-1),(q-1))[0];
 
 def modinv(a, m):
-    def egcd(a, b):
-        if a == 0:
-            return (b, 0, 1)
-        else:
-            g, y, x = egcd(b % a, a)
-            return (g, x - (b // a) * y, y)
-
-    g, x, y = egcd(a, m)
+    g, x, y = xgcd(a, m)
     if g != 1:
         raise Exception('modular inverse does not exist')
     else:
@@ -84,7 +84,7 @@ def key_generator(p,q=0,Test=False,h=0):
     if h==0:
         while True:
             h=random.randint(2,carm)
-            if gcd(h,carm)==1:
+            if xgcd(h,carm)[0]==1:
                 break;
     d=modinv(h,carm)
     return n,h,d
