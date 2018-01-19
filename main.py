@@ -1,4 +1,4 @@
-import random as rd
+import random
 from math import gcd
 
 def fermat_test(p,n=1):
@@ -8,7 +8,7 @@ def fermat_test(p,n=1):
         return False
     for i in range(n):
         while True:
-            a=random.randrange(1,p)
+            a=random.randint(1,p)
             if gcd(a,p)==1:
                 break;
         if pow(a,p-1,p)!=1:
@@ -25,7 +25,7 @@ def miller_rabin(n, k=40):
         r += 1
         s //= 2
     for _ in range(k):
-        a = random.randrange(2, n - 1)
+        a = random.randint(2, n - 1)
         x = pow(a, s, n)
         if x == 1 or x == n - 1:
             continue
@@ -55,7 +55,7 @@ def carmichael(p,q,Test=False):
     if Test==True:
         if not miller_rabin(p) or not miller_rabin(q):
             return 0
-    return abs((p-1)*(q-1))/gcd((p-1)*(q-1));
+    return abs((p-1)*(q-1))//gcd((p-1),(q-1));
 
 def modinv(a, m):
     def egcd(a, b):
@@ -83,7 +83,7 @@ def key_generator(p,q=0,Test=False,h=0):
         carm=carmichael(p,q)
     if h==0:
         while True:
-            h=random.randrange(2,carm)
+            h=random.randint(2,carm)
             if gcd(h,carm)==1:
                 break;
     d=modinv(h,carm)
@@ -91,12 +91,12 @@ def key_generator(p,q=0,Test=False,h=0):
 
 def auto_key(b_len=2048):
     while True:
-        p=random.randrange(2,pow(2,b_len//2))
+        p=random.randint(2,pow(2,b_len//2))
         if miller_rabin(p):
             break;
     while True:
-        q=random.randrange(2,pow(2,b_len//2))
-        if miller_rabin(p):
+        q=random.randint(2,pow(2,b_len//2))
+        if miller_rabin(q) and q!=p:
             break;
     return key_generator(p,q)
 
@@ -110,3 +110,6 @@ def number_cryption(n,p,m):
     for i in In:
         Out.append(pow(i,p,n))
     return Out
+
+def create_message(m):
+    return m
