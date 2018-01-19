@@ -111,5 +111,30 @@ def number_cryption(n,p,m):
         Out.append(pow(i,p,n))
     return Out
 
-def create_message(m):
-    return m
+def create_message(m, b_len=2048):
+    Out=[]
+    while len(m)>b_len//8:
+        part=m[0:b_len//8]
+        m=m.replace(part,'',1)
+        string=''
+        for i in part:
+            helper=str(bin(ord(i))).replace('0b','',1)
+            string+='0'*(8-len(helper))+helper
+        Out.append(int(string,base=2))
+    string=''
+    for i in m:
+        helper=str(bin(ord(i))).replace('0b','',1)
+        string+='0'*(8-len(helper))+helper
+    Out.append(int(string,base=2))
+    return Out
+
+def decode_message(m,b_len):
+    Out=''
+    for i in m:
+        String=str(bin(i)).replace('0b','')
+        String='0'*((b_len-len(String))%8)+String
+        for _ in range(int(len(String)/8)):
+            print(String[0:8])
+            Out+=chr(int(String[0:8],base=2))
+            String=String.replace(String[0:8],'',1)
+    return Out
